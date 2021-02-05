@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "dictionary-rn",
-    "slug": "dictionary-rn",
+    "name": "cocktails-rn",
+    "slug": "cocktails-rn",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

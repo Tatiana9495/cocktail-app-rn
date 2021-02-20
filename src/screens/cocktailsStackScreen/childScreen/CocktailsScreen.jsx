@@ -1,94 +1,210 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, ScrollView, TouchableOpacity, Text, TextInput, Image } from "react-native";
+import { View, StyleSheet, ScrollView, TouchableOpacity, Text } from "react-native";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { connect } from "react-redux";
 
 import { loadCocktailsList, loadSingleCocktail } from "../../../redux/actions/cocktails";
 import { loadCategoriesList, loadGlassList, loadIngredientsList, loadAlcoholList } from "../../../redux/actions/categories";
-import { loadSingleIngredient } from "../../../redux/actions/singleIngredient";
+import { setFilterIngredient } from "../../../redux/actions/filter";
+import CocktailCard from "../../shared/CocktailCard";
+import ModalSelectorFilter from "./ModalSelectorFilter";
 
-const CocktailsScreen = ({ ingredients, loadCocktailsList, loadCategoriesList, loadGlassList, loadIngredientsList, loadAlcoholList, cocktails, navigation, loadSingleCocktail, singleCocktail, loadSingleIngredient }) => {
-  const [inputValue, setInputValue] = useState(null);
+const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
+const CocktailsScreen = ({ loadCocktailsList, loadCategoriesList, loadGlassList, loadIngredientsList, loadAlcoholList, cocktails, navigation, loadSingleCocktail,
+  singleCocktail, categories, glassList, ingredients, alcoholList, setFilterIngredient, filterByIngredient }) => {
+  const [activeLetter, setActiveLetter] = useState("a");
+  const [maxValue, setMaxValue] = useState(6);
+  const [ingredientValue, setIngredientValue] = useState("");
+  const [categoryValue, setCategoryValue] = useState("");
+  const [glassValue, setGlassValue] = useState("");
+  const [alcoholValue, setAlcoholValue] = useState("");
 
   useEffect(() => {
-    loadCocktailsList()
-  }, [loadCocktailsList]);
+    loadCocktailsList(activeLetter)
+  }, [loadCocktailsList, activeLetter]);
 
   useEffect(() => {
-    loadCategoriesList()
-    loadGlassList()
-    loadIngredientsList()
-    loadAlcoholList()
-    loadSingleCocktail(11007)
-    loadSingleIngredient("vodka")
-  }, [loadCategoriesList, loadGlassList, loadIngredientsList, loadAlcoholList, loadSingleCocktail, loadSingleIngredient])
+    // loadCategoriesList()
+    // loadGlassList()
+    // loadIngredientsList()
+    // loadAlcoholList()
+    setFilterIngredient("vodka")
+  }, [setFilterIngredient]);
 
-  const cocktailData = singleCocktail.length > 0 && {"Glass": singleCocktail[0].strGlass, "Category": singleCocktail[0].strCategory, "Type": singleCocktail[0].strAlcoholic, "IBA Category": singleCocktail[0].strIBA}
+  const cocktailData = singleCocktail.length > 0 &&
+  {
+    "Glass": singleCocktail[0].strGlass,
+    "Category": singleCocktail[0].strCategory,
+    "Type": singleCocktail[0].strAlcoholic,
+    "IBA Category": singleCocktail[0].strIBA
+  }
 
   useEffect(() => {
     if (singleCocktail.length > 0)
       console.log(Object.entries(cocktailData))
-  }, [cocktailData])
+  }, [cocktailData]);
 
   const submit = (id) => {
     loadSingleCocktail(id);
-    navigation.navigate("Cocktail")
+    navigation.navigate("Cocktail");
   };
 
-  console.log(singleCocktail.length > 0 && `https://www.thecocktaildb.com/images/ingredients/${singleCocktail[0].strIngredient1}.png`)
+  const submitLetter = (name) => {
+    setActiveLetter(name);
+    setMaxValue(6);
+  };
+
+  let index = 0;
+  const dataIngredients = ingredients?.map(item => (
+    { key: index++, label: item.strIngredient1 }
+  ));
+
+  let i = 0;
+  const dataCategories = categories?.map(item => (
+    { key: i++, label: item.strCategory }
+  ));
+
+  let y = 0;
+  const dataAlcohol = alcoholList?.map(item => (
+    { key: y++, label: item.strAlcoholic }
+  ));
+
+  let x = 0;
+  const dataGlass = glassList?.map(item => (
+    { key: x++, label: item.strGlass }
+  ));
+
+  const arrOfLists = [dataIngredients, dataCategories, dataGlass];
+  console.log(arrOfLists)
+
+  const btnsData = [
+    {
+      id: 1,
+      title: "Ingredient",
+      navigation: "Select ingredient"
+    },
+    {
+      id: 2,
+      title: "Type",
+      navigation: "Select type"
+    },
+    {
+      id: 3,
+      title: "Category",
+      navigation: "Select category"
+    },
+    {
+      id: 4,
+      title: "Glass",
+      navigation: "Select glass"
+    }
+  ];
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.searchContainer}>
-        <TextInput
-          placeholder="Search for cocktail"
-          style={styles.searchInput}
-        />
         <TouchableOpacity
           onPress={() => navigation.navigate("Filter")}
-          activeOpacity={0.7}>
-          <FontAwesomeIcon
-            icon={faFilter}
-            color="#CCCCFF"
-            size={26}
-          />
+          activeOpacity={0.7}
+        >
+          <Text style={styles.wrapperTitle}>Filter by</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.cardsContainer}>
+      <View style={styles.filterBtnContainer}>
+        {/* <ModalSelectorFilter 
+          data={dataCategories}
+          initValue="Ingredient"
+          handleChange={setIngredientValue}
+          placeholder="Ingredient"
+          value={ingredientValue}
+        />
+        <ModalSelectorFilter 
+          data={dataIngredients}
+          initValue="Category"
+          handleChange={setCategoryValue}
+          placeholder="Category"
+          value={categoryValue}
+        />
+         <ModalSelectorFilter 
+          data={dataIngredients}
+          initValue="Glass type"
+          handleChange={setGlassValue}
+          placeholder="Glass type"
+          value={glassValue}
+        />
+        <ModalSelectorFilter 
+          data={dataAlcohol}
+          initValue="Alcohol type"
+          handleChange={setAlcoholValue}
+          placeholder="Alcohol type"
+          value={alcoholValue}
+        /> */}
         {
-          cocktails.map(item => {
+          btnsData.map(item => {
             return (
               <TouchableOpacity
-                style={styles.cocktailCard}
-                key={Math.random()}
                 activeOpacity={0.7}
-                id={item.idDrink}
-                onPress={() => submit(Number(item.idDrink))}
+                key={Math.random()}
+                style={styles.filterBtn}
+                onPress={() => navigation.navigate(item.navigation)}
               >
-                <Image
-                  source={{ uri: `${item.strDrinkThumb}/preview` }}
-                  style={styles.cocktailImg}
-                />
-                <Text style={styles.cocktailName}>{item.strDrink}</Text>
+                <Text style={styles.filterTitle}>{item.title}</Text>
               </TouchableOpacity>
             )
           })
         }
       </View>
-      {/* <View>
+      <ScrollView
+        horizontal={true}
+        style={styles.letterList}
+      >
         {
-         ingredients?.map(item => (
-            <Text>{item.strIngredient1}</Text>
+          alphabet.map(item => (
+            <TouchableOpacity
+              key={Math.random()}
+              style={styles.letter}
+              onPress={() => submitLetter(item)}
+            >
+              <Text
+                style={[activeLetter.toLowerCase() === item.toLowerCase() ? styles.underline : styles.noDecor, styles.letterText]}
+              >
+                {item}
+              </Text>
+            </TouchableOpacity>
           ))
         }
-      </View> */}
-      <TouchableOpacity
-        style={styles.showMoreBtn}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.btnText}>Show more</Text>
-      </TouchableOpacity>
+      </ScrollView>
+      <View style={styles.cardsContainer}>
+        {
+          (Object.keys(filterByIngredient).length > 0 ? filterByIngredient : cocktails).map(item => {
+            return (
+              <View
+                key={Math.random()}
+                style={styles.column}
+              >
+                <CocktailCard
+                  submit={submit}
+                  itemId={item.idDrink}
+                  itemImg={item.strDrinkThumb}
+                  itemName={item.strDrink}
+                />
+              </View>
+            )
+          }).slice(0, maxValue)
+        }
+      </View>
+      {
+        maxValue < cocktails.length &&
+        <TouchableOpacity
+          style={styles.showMoreBtn}
+          activeOpacity={0.7}
+          onPress={() => setMaxValue(maxValue + 4)}
+        >
+          <Text style={styles.btnText}>Show more</Text>
+        </TouchableOpacity>
+      }
     </ScrollView>
   );
 };
@@ -102,9 +218,51 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
     paddingTop: 19
   },
+  wrapperTitle: {
+    color: "#CCCCFF",
+    marginBottom: 15,
+    fontSize: 18,
+    fontWeight: "700"
+  },
+  filterBtnContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+  },
+  filterBtn: {
+    width: "48%",
+    height: 35,
+    backgroundColor: "#CCCCFF",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 11
+  },
+  filterTitle: {
+    color: "#262673",
+    fontWeight: "700"
+  },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  letterList: {
+    marginTop: 15,
+  },
+  letter: {
+    marginRight: 14
+  },
+  letterText: {
+    color: "#CCCCFF",
+    fontSize: 20,
+    fontWeight: "700",
+    textTransform: "uppercase"
+  },
+  underline: {
+    textDecorationLine: "underline"
+  },
+  noDecor: {
+    textDecorationLine: "none"
   },
   searchInput: {
     flex: 1,
@@ -120,28 +278,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     flexWrap: "wrap",
-    marginTop: 30,
+    marginTop: 15,
   },
-  cocktailCard: {
-    height: 157,
-    backgroundColor: "#000033",
-    width: "48%",
-    borderRadius: 5,
-    marginBottom: 15,
-    paddingLeft: 15,
-    paddingRight: 15,
-    justifyContent: "center"
-  },
-  cocktailImg: {
-    marginBottom: 10,
-    width: 100,
-    height: 100,
-    borderRadius: 3
-  },
-  cocktailName: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#CCCCFF"
+  column: {
+    width: "48%"
   },
   showMoreBtn: {
     height: 38,
@@ -160,6 +300,10 @@ const styles = StyleSheet.create({
 
 export default connect((state) => ({
   cocktails: state.cocktails,
+  singleCocktail: state.singleCocktail,
+  categories: state.categories.categoriesList,
+  glassList: state.categories.glassList,
   ingredients: state.categories.ingredientsList,
-  singleCocktail: state.singleCocktail
-}), { loadCocktailsList, loadCategoriesList, loadGlassList, loadIngredientsList, loadAlcoholList, loadSingleCocktail, loadSingleIngredient })(CocktailsScreen);
+  alcoholList: state.categories.alcoholList,
+  filterByIngredient: state.filter.ingredient
+}), { loadCocktailsList, loadCategoriesList, loadGlassList, loadIngredientsList, loadAlcoholList, loadSingleCocktail, setFilterIngredient })(CocktailsScreen);

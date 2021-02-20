@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, ScrollView, TouchableOpacity, Text, TextInput, Image } from "react-native";
+import { View, StyleSheet, ScrollView, Text, Image } from "react-native";
 import { connect } from "react-redux";
 
 const IngredientScreen = ({ singleIngredient }) => {
@@ -10,14 +10,24 @@ const IngredientScreen = ({ singleIngredient }) => {
         style={styles.ingredientImg}
       />
       <Text style={styles.ingredientName}>{singleIngredient.strIngredient}</Text>
-      <View style={styles.contentWrapper}>
-        <Text style={styles.boldText}>Type</Text>
-        <Text>{singleIngredient.strType}</Text>
-      </View>
-      <Text style={styles.wrapperTitle}>Description</Text>
-      <View style={[styles.contentWrapper, styles.lastWrapper]}>
-        <Text>{singleIngredient.strDescription}</Text>
-      </View>
+      {
+        singleIngredient.strType &&
+        <>
+          <View style={styles.contentWrapper}>
+            <Text style={styles.boldText}>Type</Text>
+            <Text>{singleIngredient.strType}</Text>
+          </View>
+        </>
+      }
+      {
+        singleIngredient.strDescription &&
+        <>
+          <Text style={styles.wrapperTitle}>Description</Text>
+          <View style={[styles.contentWrapper, styles.lastWrapper]}>
+            <Text>{singleIngredient.strDescription}</Text>
+          </View>
+        </>
+      }
     </ScrollView >
   );
 };
@@ -71,4 +81,3 @@ const styles = StyleSheet.create({
 export default connect((state) => ({
   singleIngredient: state.singleIngredient
 }))(IngredientScreen);
-

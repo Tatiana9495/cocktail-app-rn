@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, TouchableOpacity, Text } from "react-native";
-// import { Picker } from "@react-native-picker/picker";
+import { Picker } from "@react-native-picker/picker";
 // import ModalSelector from "react-native-modal-selector";
 import { connect } from "react-redux";
 
@@ -20,20 +20,22 @@ const FilterScreen = ({ loadCategoriesList, loadGlassList, loadIngredientsList, 
     loadAlcoholList()
   }, [loadCategoriesList, loadGlassList, loadIngredientsList, loadAlcoholList])
 
-  let index = 0;
-  const dataIngredients = ingredients.map(item => (
-    { key: index++, label: item.strIngredient1 }
-  ));
+  // let index = 0;
+  // const dataIngredients = ingredients.map(item => (
+  //   { key: index++, label: item.strIngredient1 }
+  // ));
 
-  let i = 0;
-  const dataCategories = categories.map(item => (
-    { key: i++, label: item.strCategory }
-  ));
+  // let i = 0;
+  // const dataCategories = categories.map(item => (
+  //   { key: i++, label: item.strCategory }
+  // ));
 
-  let x = 0;
-  const dataGlass = glassList.map(item => (
-    { key: x++, label: item.strGlass }
-  ));
+  // let x = 0;
+  // const dataGlass = glassList.map(item => (
+  //   { key: x++, label: item.strGlass }
+  // ));
+
+  // const arrOfLists = [dataIngredients, dataCategories, dataGlass];
 
   return (
     <View style={styles.container}>

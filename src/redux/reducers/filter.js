@@ -2,10 +2,10 @@ import { FILTER_INGREDIENT, FILTER_TYPE, FILTER_CATEGORY, FILTER_GLASS, LOADING_
 
 const initState = {
   filters: {
-    ingredient: {},
-    type: {},
-    category: {},
-    glass: {}
+    ingredient: [],
+    type: [],
+    category: [],
+    glass: []
   },
   isLoadingFilter: false
 }
@@ -15,49 +15,49 @@ const filterReducer = (state = initState, action) => {
     case LOADING_FILTERS: 
       return {
         filters: {
-          ingredient: {},
-          type: {},
-          category: {},
-          glass: {}
+          ingredient: [],
+          type: [],
+          category: [],
+          glass: []
         },
-        isLoadingFilter: tr
+        isLoadingFilter: true
       }
     case FILTER_INGREDIENT:
       return {
         filters: {
           ingredient: action.data.drinks,
-          type: {},
-          category: {},
-          glass: {}
+          type: [],
+          category: [],
+          glass: []
         },
         isLoadingFilter: false
       }
     case FILTER_TYPE:
       return {
         filters: {
-          ingredient: {},
+          ingredient: [],
           type: action.data.drinks,
-          category: {},
-          glass: {}
+          category: [],
+          glass: []
         },
         isLoadingFilter: false
       };
     case FILTER_CATEGORY:
       return {
         filters: {
-          ingredient: {},
-          type: {},
+          ingredient: [],
+          type: [],
           category: action.data.drinks,
-          glass: {}
+          glass: []
         },
         isLoadingFilter: false
       };
     case FILTER_GLASS:
       return {
         filters: {
-          ingredient: {},
-          type: {},
-          category: {},
+          ingredient: [],
+          type: [],
+          category: [],
           glass: action.data.drinks
         },
         isLoadingFilter: false

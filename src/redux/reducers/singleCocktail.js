@@ -5,7 +5,7 @@ const initialState = {
   isLoadingCocktail: false
 }
 
-const singleCoctailReducer = (state = [], action) => {
+const singleCoctailReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOADING_SINGLE_COCKTAIL: 
     return {

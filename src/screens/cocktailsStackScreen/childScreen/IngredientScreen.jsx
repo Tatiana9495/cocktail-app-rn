@@ -2,33 +2,41 @@ import React from "react";
 import { View, StyleSheet, ScrollView, Text, Image } from "react-native";
 import { connect } from "react-redux";
 
-const IngredientScreen = ({ singleIngredient }) => {
+import SingleCocktailSkeleton from "../../../skeletons/SingleCocktailSkeleton";
+
+const IngredientScreen = ({ singleIngredient, isLoadingIngredient }) => {
   return (
-    <ScrollView style={styles.container}>
-      <Image
-        source={{ uri: `https://www.thecocktaildb.com/images/ingredients/${singleIngredient.strIngredient}.png` }}
-        style={styles.ingredientImg}
-      />
-      <Text style={styles.ingredientName}>{singleIngredient.strIngredient}</Text>
+    <>
       {
-        singleIngredient.strType &&
-        <>
-          <View style={styles.contentWrapper}>
-            <Text style={styles.boldText}>Type</Text>
-            <Text>{singleIngredient.strType}</Text>
-          </View>
-        </>
+        isLoadingIngredient ?
+          <SingleCocktailSkeleton /> :
+          <ScrollView style={styles.container}>
+            <Image
+              source={{ uri: `https://www.thecocktaildb.com/images/ingredients/${singleIngredient.strIngredient}.png` }}
+              style={styles.ingredientImg}
+            />
+            <Text style={styles.ingredientName}>{singleIngredient.strIngredient}</Text>
+            {
+              singleIngredient.strType &&
+              <>
+                <View style={styles.contentWrapper}>
+                  <Text style={styles.boldText}>Type</Text>
+                  <Text>{singleIngredient.strType}</Text>
+                </View>
+              </>
+            }
+            {
+              singleIngredient.strDescription &&
+              <>
+                <Text style={styles.wrapperTitle}>Description</Text>
+                <View style={[styles.contentWrapper, styles.lastWrapper]}>
+                  <Text>{singleIngredient.strDescription}</Text>
+                </View>
+              </>
+            }
+          </ScrollView>
       }
-      {
-        singleIngredient.strDescription &&
-        <>
-          <Text style={styles.wrapperTitle}>Description</Text>
-          <View style={[styles.contentWrapper, styles.lastWrapper]}>
-            <Text>{singleIngredient.strDescription}</Text>
-          </View>
-        </>
-      }
-    </ScrollView >
+    </>
   );
 };
 
@@ -79,5 +87,6 @@ const styles = StyleSheet.create({
 })
 
 export default connect((state) => ({
-  singleIngredient: state.singleIngredient
+  singleIngredient: state.singleIngredient.data,
+  isLoadingIngredient: state.singleIngredient.isLoadingIngredient
 }))(IngredientScreen);

@@ -1,16 +1,16 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
-const IngredientFilterScreen = () => {
+const FilterSkeleton = () => {
 
   return (
     <View style={styles.container}>
       <View>
         {
-          Array(10).fill(0).map(item => {
+          Array(9).fill(0).map(item => {
             return (
               <View style={styles.choice}>
-                <View style={styles.innerChoice}>{item}</View>
+                <View style={styles.innerChoice}></View>
               </View>
             )
           })
@@ -32,10 +32,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#00004D",
+    paddingBottom: 100
   },
   choice: {
     height: 42,
-    flex: 1,
     flexDirection: "row",
     paddingLeft: 17,
     paddingRight: 17,
@@ -45,14 +45,18 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   innerChoice: {
-    backgroundColor: rgba(221, 221, 221, 0.8),
+    backgroundColor: "rgba(221, 221, 221, 0.8)",
     width: 116,
-    height: 40,
+    height: 16,
     borderRadius: 5
   },
   btnContainer: {
     flexDirection: "row",
     flex: 1,
+    justifyContent: "space-between",
+    marginTop: 17,
+    paddingRight: 17,
+    paddingLeft: 17
   },
   bottomBtn: {
     backgroundColor: "rgba(221, 221, 221, 0.7)",
@@ -70,6 +74,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect((state) => ({
-  ingredients: state.categories.ingredientsList,
-}), { loadIngredientsList, setFilterIngredient })(IngredientFilterScreen);
+export default FilterSkeleton;

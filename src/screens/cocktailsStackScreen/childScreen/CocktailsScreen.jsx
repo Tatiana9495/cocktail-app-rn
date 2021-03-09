@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, TouchableOpacity, Text } from "react-native";
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { connect } from "react-redux";
 
 import { loadCocktailsList, loadSingleCocktail } from "../../../redux/actions/cocktails";
@@ -11,27 +9,37 @@ import CocktailCard from "../../shared/CocktailCard";
 import ModalSelectorFilter from "./ModalSelectorFilter";
 
 const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+const btnsData = [
+  {
+    id: 1,
+    title: "Ingredient",
+    navigation: "Select ingredient"
+  },
+  {
+    id: 2,
+    title: "Type",
+    navigation: "Select type"
+  },
+  {
+    id: 3,
+    title: "Category",
+    navigation: "Select category"
+  },
+  {
+    id: 4,
+    title: "Glass",
+    navigation: "Select glass"
+  }
+];
 
-const CocktailsScreen = ({ loadCocktailsList, loadCategoriesList, loadGlassList, loadIngredientsList, loadAlcoholList, cocktails, navigation, loadSingleCocktail,
-  singleCocktail, categories, glassList, ingredients, alcoholList, setFilterIngredient, filterByIngredient }) => {
+const CocktailsScreen = ({ loadCocktailsList, cocktails, navigation, loadSingleCocktail,
+  singleCocktail, categories, glassList, ingredients, alcoholList, filterByIngredient, filterByType, filterByCategory, filterByGlass }) => {
   const [activeLetter, setActiveLetter] = useState("a");
   const [maxValue, setMaxValue] = useState(6);
-  const [ingredientValue, setIngredientValue] = useState("");
-  const [categoryValue, setCategoryValue] = useState("");
-  const [glassValue, setGlassValue] = useState("");
-  const [alcoholValue, setAlcoholValue] = useState("");
 
   useEffect(() => {
     loadCocktailsList(activeLetter)
   }, [loadCocktailsList, activeLetter]);
-
-  useEffect(() => {
-    // loadCategoriesList()
-    // loadGlassList()
-    // loadIngredientsList()
-    // loadAlcoholList()
-    setFilterIngredient("vodka")
-  }, [setFilterIngredient]);
 
   const cocktailData = singleCocktail.length > 0 &&
   {
@@ -56,51 +64,43 @@ const CocktailsScreen = ({ loadCocktailsList, loadCategoriesList, loadGlassList,
     setMaxValue(6);
   };
 
-  let index = 0;
-  const dataIngredients = ingredients?.map(item => (
-    { key: index++, label: item.strIngredient1 }
-  ));
+  // let index = 0;
+  // const dataIngredients = ingredients?.map(item => (
+  //   { key: index++, label: item.strIngredient1 }
+  // ));
 
-  let i = 0;
-  const dataCategories = categories?.map(item => (
-    { key: i++, label: item.strCategory }
-  ));
+  // let i = 0;
+  // const dataCategories = categories?.map(item => (
+  //   { key: i++, label: item.strCategory }
+  // ));
 
-  let y = 0;
-  const dataAlcohol = alcoholList?.map(item => (
-    { key: y++, label: item.strAlcoholic }
-  ));
+  // let y = 0;
+  // const dataAlcohol = alcoholList?.map(item => (
+  //   { key: y++, label: item.strAlcoholic }
+  // ));
 
-  let x = 0;
-  const dataGlass = glassList?.map(item => (
-    { key: x++, label: item.strGlass }
-  ));
+  // let x = 0;
+  // const dataGlass = glassList?.map(item => (
+  //   { key: x++, label: item.strGlass }
+  // ));
 
-  const arrOfLists = [dataIngredients, dataCategories, dataGlass];
-  console.log(arrOfLists)
+  // const arrOfLists = [dataIngredients, dataCategories, dataGlass];
 
-  const btnsData = [
-    {
-      id: 1,
-      title: "Ingredient",
-      navigation: "Select ingredient"
-    },
-    {
-      id: 2,
-      title: "Type",
-      navigation: "Select type"
-    },
-    {
-      id: 3,
-      title: "Category",
-      navigation: "Select category"
-    },
-    {
-      id: 4,
-      title: "Glass",
-      navigation: "Select glass"
-    }
-  ];
+  const resultArray = () => {
+    if (filterByIngredient.length > 0) return filterByIngredient;
+    else if (filterByType.length > 0) return filterByType;
+    else if (filterByCategory.length > 0) return filterByCategory;
+    else if (filterByGlass.length > 0) return filterByGlass;
+    else return cocktails;
+  };
+
+  const resultEquality = () => {
+    if (filterByIngredient.length > 0) return maxValue < filterByIngredient.length;
+    else if (filterByType.length > 0) return maxValue < filterByType.length;
+    else if (filterByCategory.length > 0) return maxValue < filterByCategory.length;
+    else if (filterByGlass.length > 0) return maxValue < filterByGlass.length;
+    else return maxValue < cocktails.length;
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -156,29 +156,35 @@ const CocktailsScreen = ({ loadCocktailsList, loadCategoriesList, loadGlassList,
           })
         }
       </View>
-      <ScrollView
-        horizontal={true}
-        style={styles.letterList}
-      >
-        {
-          alphabet.map(item => (
-            <TouchableOpacity
-              key={Math.random()}
-              style={styles.letter}
-              onPress={() => submitLetter(item)}
-            >
-              <Text
-                style={[activeLetter.toLowerCase() === item.toLowerCase() ? styles.underline : styles.noDecor, styles.letterText]}
+      {
+        filterByIngredient.length === 0 &&
+        filterByType.length === 0 &&
+        filterByCategory.length === 0 &&
+        filterByGlass.length === 0 &&
+        <ScrollView
+          horizontal={true}
+          style={styles.letterList}
+        >
+          {
+            alphabet.map(item => (
+              <TouchableOpacity
+                key={Math.random()}
+                style={styles.letter}
+                onPress={() => submitLetter(item)}
               >
-                {item}
-              </Text>
-            </TouchableOpacity>
-          ))
-        }
-      </ScrollView>
+                <Text
+                  style={[activeLetter.toLowerCase() === item.toLowerCase() ? styles.underline : styles.noDecor, styles.letterText]}
+                >
+                  {item}
+                </Text>
+              </TouchableOpacity>
+            ))
+          }
+        </ScrollView>
+      }
       <View style={styles.cardsContainer}>
         {
-          (Object.keys(filterByIngredient).length > 0 ? filterByIngredient : cocktails).map(item => {
+          resultArray().map(item => {
             return (
               <View
                 key={Math.random()}
@@ -196,11 +202,11 @@ const CocktailsScreen = ({ loadCocktailsList, loadCategoriesList, loadGlassList,
         }
       </View>
       {
-        maxValue < cocktails.length &&
+        resultEquality() &&
         <TouchableOpacity
           style={styles.showMoreBtn}
           activeOpacity={0.7}
-          onPress={() => setMaxValue(maxValue + 4)}
+          onPress={() => setMaxValue(maxValue + 8)}
         >
           <Text style={styles.btnText}>Show more</Text>
         </TouchableOpacity>
@@ -305,5 +311,8 @@ export default connect((state) => ({
   glassList: state.categories.glassList,
   ingredients: state.categories.ingredientsList,
   alcoholList: state.categories.alcoholList,
-  filterByIngredient: state.filter.ingredient
+  filterByIngredient: state.filter.filters.ingredient,
+  filterByType: state.filter.filters.type,
+  filterByCategory: state.filter.filters.category,
+  filterByGlass: state.filter.filters.glass
 }), { loadCocktailsList, loadCategoriesList, loadGlassList, loadIngredientsList, loadAlcoholList, loadSingleCocktail, setFilterIngredient })(CocktailsScreen);

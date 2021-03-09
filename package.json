@@ -9,7 +9,8 @@
     "test": "jest"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "automock": true
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
@@ -38,6 +39,11 @@
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
+    "@babel/plugin-syntax-jsx": "^7.12.13",
+    "@babel/plugin-transform-modules-commonjs": "^7.13.0",
+    "@babel/plugin-transform-react-jsx": "^7.12.17",
+    "@babel/preset-react": "^7.12.13",
+    "@testing-library/react-native": "^7.1.0",
     "jest": "^26.6.3"
   },
   "private": true

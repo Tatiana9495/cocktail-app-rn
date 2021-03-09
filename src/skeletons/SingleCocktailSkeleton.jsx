@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
     marginBottom: 16
   },
   contentWrapper: {
-    // backgroundColor: "rgba(221, 221, 221, 0.7);",
     backgroundColor: "white",
     marginBottom: 13,
     borderRadius: 5,
@@ -78,7 +77,6 @@ const styles = StyleSheet.create({
     paddingLeft: 17,
     paddingRight: 17,
     borderRadius: 5,
-    // flexDirection: "row"
   },
   innerContent: {
     flex: 1,

@@ -1,6 +1,5 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { connect } from "react-redux";
 
 import CocktailsScreen from "./childScreen/CocktailsScreen";
 import FilterScreen from "./childScreen/FilterScreen";
@@ -28,6 +27,4 @@ const CocktailsStackScreen = () => {
   );
 };
 
-export default connect((state) => ({
-  singleCocktail: state.singleCocktail
-}))(CocktailsStackScreen);
+export default CocktailsStackScreen;
